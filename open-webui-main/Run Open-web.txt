@@ -1,0 +1,3 @@
+pip install open-webui
+open-webui serve
+localhost:8080

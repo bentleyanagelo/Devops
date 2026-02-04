@@ -165,3 +165,14 @@ class TestUsers(AbstractPostgresTest):
         assert len(response.json()) == 1
         data = response.json()
         _assert_user(data, "1")
+
+        # Delete current (session) user
+        with mock_webui_user(id="1"):
+            response = self.fast_api_client.delete(self.create_url("/user"))
+        assert response.status_code == 200
+
+        # Get all users
+        with mock_webui_user(id="3"):
+            response = self.fast_api_client.get(self.create_url(""))
+        assert response.status_code == 200
+        assert len(response.json()) == 0

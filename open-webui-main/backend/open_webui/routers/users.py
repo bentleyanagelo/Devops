@@ -325,3 +325,21 @@ async def delete_user_by_id(user_id: str, user=Depends(get_admin_user)):
         status_code=status.HTTP_403_FORBIDDEN,
         detail=ERROR_MESSAGES.ACTION_PROHIBITED,
     )
+
+
+############################
+# DeleteSessionUser
+############################
+
+@router.delete("/user", response_model=bool)
+async def delete_session_user(user=Depends(get_verified_user)):
+    """Delete the currently authenticated user and their auth record."""
+    result = Auths.delete_auth_by_id(user.id)
+
+    if result:
+        return True
+
+    raise HTTPException(
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        detail=ERROR_MESSAGES.DELETE_USER_ERROR,
+    )
